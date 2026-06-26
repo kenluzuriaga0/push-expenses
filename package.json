@@ -1,0 +1,21 @@
+{
+  "name": "push-expenses",
+  "version": "1.0.0",
+  "description": "Outlook → Actual Budget: registra gastos de tarjeta de crédito automáticamente",
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "list": "tsx src/list.ts",
+    "build": "tsc",
+    "start:prod": "node dist/index.js"
+  },
+  "dependencies": {
+    "@actual-app/api": "^26.6.0",
+    "@azure/msal-node": "^2.16.2",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.4",
+    "typescript": "^5.7.3"
+  }
+}
