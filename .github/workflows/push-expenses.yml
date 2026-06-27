@@ -1,0 +1,52 @@
+name: Push Expenses
+
+on:
+  schedule:
+    - cron: '0 0 */2 * *'   # cada 48 h (medianoche UTC los días pares)
+  workflow_dispatch:          # ejecución manual desde la UI de GitHub
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Restaura el token de Outlook desde el secret TOKEN_CACHE (base64)
+      - name: Restore Outlook token cache
+        run: echo "${{ secrets.TOKEN_CACHE }}" | base64 -d > .token-cache.json
+
+      - name: Run script
+        env:
+          ACTUAL_SERVER_URL:    ${{ secrets.ACTUAL_SERVER_URL }}
+          ACTUAL_PASSWORD:      ${{ secrets.ACTUAL_PASSWORD }}
+          ACTUAL_BUDGET_ID:     ${{ secrets.ACTUAL_BUDGET_ID }}
+          ACTUAL_ACCOUNT_NAME:  ${{ secrets.ACTUAL_ACCOUNT_NAME }}
+          AZURE_CLIENT_ID:      ${{ secrets.AZURE_CLIENT_ID }}
+          EMAIL_SUBJECT_REGEX:  ${{ secrets.EMAIL_SUBJECT_REGEX }}
+          PROCESSED_LABEL:      ${{ secrets.PROCESSED_LABEL }}
+          EMAIL_LIMIT:          ${{ secrets.EMAIL_LIMIT }}
+        run: npm start
+
+      # Persiste el token (con refresh token actualizado) de vuelta al secret.
+      # Requiere un PAT con permiso "secrets: write" guardado como GH_PAT_SECRETS.
+      - name: Update TOKEN_CACHE secret
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT_SECRETS }}
+        run: |
+          if [ -f .token-cache.json ]; then
+            gh secret set TOKEN_CACHE \
+              --body "$(base64 -w 0 .token-cache.json)" \
+              --repo "${{ github.repository }}"
+          fi
