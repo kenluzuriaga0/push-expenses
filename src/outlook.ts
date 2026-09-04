@@ -11,6 +11,17 @@ const GRAPH_BASE = 'https://graph.microsoft.com/v1.0';
 const PAYEE_RULES: Array<{ pattern: RegExp; payee: string }> = [
   { pattern: /UBER/i, payee: 'Uber' },
   { pattern: /COMISARIATO/i, payee: 'Comisariato' },
+  { pattern: /megamaxi/i, payee: 'Megamaxi' },
+  { pattern: /supermaxi/i, payee: 'Megamaxi' },
+  { pattern: /spotify/i, payee: 'Spotify' },
+  { pattern: /listo/i, payee: 'Listo!' },
+  { pattern: /mcdonald/i, payee: 'mc donalds' },
+  { pattern: /difare/i, payee: 'Pharmacys' },
+  { pattern: /naturissimo/i, payee: 'Naturissimo' },
+  { pattern: /mayoral/i, payee: 'Grocery store' },
+  { pattern: /sarahi/i, payee: 'Grocery store' },
+  { pattern: /fybeca/i, payee: 'Fybeca' },
+  { pattern: /mr morocho/i, payee: 'Mr Morocho' },
 ];
 
 // ── Types ─────────────────────────────────────────────────────────────────────
