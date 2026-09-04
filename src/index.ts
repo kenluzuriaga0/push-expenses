@@ -22,7 +22,7 @@ const config = {
   },
   outlook: {
     clientId: process.env.AZURE_CLIENT_ID!,
-    subjectRegex: process.env.EMAIL_SUBJECT_REGEX ?? 'Consumo Tarjeta de Crédito por (?:USD|\\$) ([\\d.]+)',
+    subjectRegex: process.env.EMAIL_SUBJECT_REGEX || 'Consumo Tarjeta de Crédito por (?:USD|\\$) ([\\d.]+)',
     processedLabel: process.env.PROCESSED_LABEL ?? 'ActualBudget',
     fromDate: process.env.EMAIL_FROM_DATE ?? null,
     limit: parseInt(process.env.EMAIL_LIMIT ?? '50', 10),

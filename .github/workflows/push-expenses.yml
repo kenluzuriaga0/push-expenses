@@ -2,7 +2,7 @@ name: Push Expenses
 
 on:
   schedule:
-    - cron: '0 0 */2 * *'   # cada 48 h (medianoche UTC los días pares)
+    - cron: '0 0 * * *'   # cada 24 h (medianoche UTC)
   workflow_dispatch:          # ejecución manual desde la UI de GitHub
 
 permissions:
