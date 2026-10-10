@@ -48,6 +48,7 @@ export interface FetchOptions {
   processedLabel: string;
   fromDate?: string | null;
   limit: number;
+  folder?: string | null;
 }
 
 // ── Auth ──────────────────────────────────────────────────────────────────────
@@ -113,6 +114,26 @@ async function graphPatch(token: string, path: string, body: unknown): Promise<v
   if (!res.ok) throw new Error(`Graph PATCH ${res.status}: ${await res.text()}`);
 }
 
+// ── Folders ───────────────────────────────────────────────────────────────────
+
+// Devuelve el ID de una carpeta de primer nivel por su nombre (sin distinguir mayúsculas).
+// Sin nombre, usa la bandeja de entrada.
+async function resolveFolderPath(token: string, folder: string | null | undefined): Promise<string> {
+  if (!folder) return '/me/mailFolders/inbox';
+
+  const { value: folders } = await graphGet<{ value: Array<{ id: string; displayName: string }> }>(
+    token,
+    '/me/mailFolders',
+    { $top: '999' },
+  );
+  const match = folders.find(f => f.displayName.toLowerCase() === folder.toLowerCase());
+  if (!match) {
+    const available = folders.map(f => f.displayName).join(', ');
+    throw new Error(`Carpeta "${folder}" no encontrada. Disponibles: ${available}`);
+  }
+  return `/me/mailFolders/${match.id}`;
+}
+
 // ── Parsing ───────────────────────────────────────────────────────────────────
 
 function parseAmount(subject: string, subjectRegex: string): number | null {
@@ -152,9 +173,10 @@ export async function fetchUnprocessedEmails(
       : { $top: String(opts.limit) }),
   };
 
+  const folderPath = await resolveFolderPath(token, opts.folder);
   const { value: raw } = await graphGet<{ value: RawEmail[] }>(
     token,
-    '/me/mailFolders/inbox/messages',
+    `${folderPath}/messages`,
     params,
     { Prefer: 'outlook.body-content-type="text"' },
   );

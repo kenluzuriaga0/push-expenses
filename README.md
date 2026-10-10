@@ -107,6 +107,7 @@ Abre el link, ingresa el código y haz login con tu cuenta Hotmail. El token se 
 | `EMAIL_SUBJECT_REGEX` | — | Regex para filtrar emails; el último grupo numérico es el monto |
 | `EMAIL_FROM_DATE` | — | Buscar emails desde esta fecha `YYYY-MM-DD`; ignora `EMAIL_LIMIT` |
 | `EMAIL_LIMIT` | — | Últimos N emails a leer si no se define `EMAIL_FROM_DATE` (default: `50`) |
+| `EMAIL_FOLDER` | — | Carpeta de Outlook donde están los correos, por nombre (solo primer nivel; default: bandeja de entrada) |
 | `PROCESSED_LABEL` | — | Categoría que se asigna al email procesado (default: `ActualBudget`) |
 
 ---
