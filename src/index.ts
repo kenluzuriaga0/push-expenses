@@ -26,6 +26,7 @@ const config = {
     processedLabel: process.env.PROCESSED_LABEL ?? 'ActualBudget',
     fromDate: process.env.EMAIL_FROM_DATE ?? null,
     limit: parseInt(process.env.EMAIL_LIMIT ?? '50', 10),
+    folder: process.env.EMAIL_FOLDER || null,
   },
 };
 
@@ -35,8 +36,9 @@ async function main(): Promise<void> {
   console.log('Autenticando en Outlook...');
   const token = await getToken(config.outlook.clientId);
 
-  const { fromDate, limit } = config.outlook;
-  console.log(fromDate ? `Leyendo emails desde ${fromDate}...` : `Leyendo los últimos ${limit} emails...`);
+  const { fromDate, limit, folder } = config.outlook;
+  const where = folder ? `la carpeta "${folder}"` : 'la bandeja de entrada';
+  console.log(fromDate ? `Leyendo emails de ${where} desde ${fromDate}...` : `Leyendo los últimos ${limit} emails de ${where}...`);
   const emails = await fetchUnprocessedEmails(token, config.outlook);
 
   if (emails.length === 0) {

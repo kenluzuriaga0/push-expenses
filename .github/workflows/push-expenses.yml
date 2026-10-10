@@ -36,6 +36,7 @@ jobs:
           EMAIL_SUBJECT_REGEX:  ${{ secrets.EMAIL_SUBJECT_REGEX }}
           PROCESSED_LABEL:      ${{ secrets.PROCESSED_LABEL }}
           EMAIL_LIMIT:          ${{ secrets.EMAIL_LIMIT }}
+          EMAIL_FOLDER:         ${{ secrets.EMAIL_FOLDER }}
         run: npm start
 
       # Persiste el token (con refresh token actualizado) de vuelta al secret.
